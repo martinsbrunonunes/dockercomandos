@@ -1,0 +1,181 @@
+﻿================================================
+Instalando o Docker
+
+curl https://get.docker.com | sudo sh 
+
+================================================
+dentro de /etc/systemd/system/docker.service.d
+
+Caso tenha algum proxy na rede, é necessário criar o arquivo .conf (o Docker lê os
+arquivos .conf) com os parametros do proxy, pois se não existir não será possível 
+ealizar o download das imagens.
+================================================
+    Reiniciando o serciço do Docker 
+
+sudo systemctl daemon-reload    
+
+Reiniciando o serviço : 
+
+sudo systemctl restart docker
+
+============    Comandos Docker     ============
+
+docker pull hello-world
+# Realiza o download da imagem hello-world
+
+docker images
+# Exibe as imagens baixadas
+
+docker run hello-world
+# Executa o container Hello-world
+
+docker run -d hello-world 
+# Executa o container em background [options]
+
+docker run [options] [image] [command] [args]
+# Example
+
+docker run -i -t ubuntu:14.04
+# Comando executa o container ubuntu:14.04, com o -i força a interação 
+com o container e -t inicia com um terminal de comando interativo.
+
+docker ps
+# Exibe todos os container que estão rodando, tanto em primeiro quanto em segundo plano.
+
+doker ps -a 
+# Exibe todos os container's (parados e em funcionamento).
+
+docker rm 13ea069d7c97 
+# Remove o container( 13ea069d7c97 ID)
+
+docker rmi 
+# Remove a imagem de um container.
+
+docker exec -i -t 2cb0d9787c4d 
+# Executa o comando 
+
+docker exec -it 2cb0d9787c4d bash
+# Executa um container que ja estava iniciado no modo interativo.
+
+docker run -d -p 8080:80 httpd
+# Criando um container do apache configurando manualmente que o host escute na porta 8080, sendo a mesma setada para acesso externo (opção -p minúsculo).
+
+docker run -d -P httpd 
+# Criando um container do apache , a opção -P significa que ele irá criar uma porta aleatóriamente.
+
+docker run -it --name NOME_QUE_QUERO debian
+# Comando cria um container dando um nome para o mesmo.
+
+docker commit NOME_QUE_QUERO SERVIDOR_WEB
+# Comando que cria uma imagem do container NOME_QUE_QUERO com o nome SERVIDOR_WEB
+
+docker images
+# Lista as imagens do Docker.
+
+docker build -t brunonunes.
+# O comando docker build cria uma imagem a partir do dockerfile, o parâmetro -t 'tagueia' essa imagem com o nome brunonunes e o . significa que o arquivo do dockerfile esta no mesmo diretório.
+
+docker build --build-arg http_proxy=$http_proxy --build-arg  https_proxy=$https_proxy -t bruno/nginx:1.0 .
+# Com esse comando é possível criar a imagem setando proxy, caso na rede tenha proxy, os parâmetros são : --build-arg 
+
+docker port new_web
+# Comando para verificar qual porta funciona o contai
+
+docker volume inspect jenkins_home
+#Exibirá no modelo json as configurações o volume jenkins_home. Há um campo chamado "Mountpoint" a qual exibe onde o volume esta fisicamente instalado.
+
+docker exec e9a570931d22 cat /var/jenkins_home/secrets/initialAdminPassword
+# Para visualizar a senha do Admin do Jenkins quando o mesmo roda em um container Docker
+
+docker run -d --name 
+
+--restart=always
+# Parâmetro para setar que um container inicie  automaticamente toda vez que o Docker for iniciado.
+
+docker run -d -p 5000:5000 --name registry registry:2
+# Criando um registry
+
+docker rm $(docker ps -a -q)
+# Remove todas os contâiner Docker.
+
+=============================== Comunicação entre containers ================================
+
+1- Utiliando o LINKING , usaremos um container PHP com o banco de dados MYSQL e, por fim faremos a comunicação desses containers via LINK.
+
+
+docker run -d --name database_mySQL -e MYSQL_ROOT_PASSWORD=123 -e MYSQL_DATABASE=teste -e MYSQL_USER=user -e MYSQL_PASSWORD=pass
+# Criando um container Docker utilizando o parâmetro -e que chama as variáveis de ambiente e seta algumas configurações, como podemos ver acima, usuario root, senha do root, nome da base de dados, usuario de acesso e senha.
+
+
+docker run -d --name php_webpage --link database:db -p 9080:80 -v /home/bruno/site:/var/www/html php:5.6-apache
+# O parametro --link faz, nesse caso, a comunicação entre os container da pagina WEB com o banco de dados MYQL, que tem o nome de database. O parâmetro -v conecta o diretório do host (/home/bruno/site) com o diretório padrão do PHP no container.
+
+
+
+==================== Criando Imagens com o Dockerfile ====================
+Definição :
+
+Dockerfile é um arquivo de configuração que contém as instruções para criação de uma imagem.
+
+Criando o arquivo Dockerfile e adicionando as informações :
+
+FROM debian
+FROM ubuntu
+MAINTAINER Kimbro Staken version: 0.1
+RUN apt-get update && apt-get install -y apache2 && apt-get clean && rm -rf /var/lib/apt/lists/*
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ADD index.html /var/www/html
+EXPOSE 80
+CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
+
+
+
+=================	Volumes Docker	=================
+
+1- Volume entre o host e o container ("Host directory as a data volume")
+
+docker run -d --name web_pasta -v /home/bruno/site:/usr/local/apache2/htdocs -p 9091:80 httpd .
+# O parâmetro -v indica a pasta a qual você irá mapear o diretório da máquina e após o (:) indique qual a pasta do container a qual vc quer vincular. OBS : Nessa ocasião foi usado uma imagem do apache (HTTPD) logo, o diretório que exibe o site é /usr/local/apache2/htdocs e foi vinculada ao da máquina /home/bruno/site.
+
+
+2- Container como volume ("Data-only container") Como mapear um volume utilizando outro container.
+
+docker create -v /usr/local/apache2/htdocs --name datacontainer ubuntu 
+# Docker create cria o container mas o mesmo fica em standby. O parâmetro -v indica a pasta a qual ele vai manipular que no caso é a da aplicação WEB. O parâmetro --name é o nome dado para o seu container (datacontainer) .
+
+docker run --name web_volumes -d --volumes-from datacontainer -p 9093:80 httpd
+# O parâmetro -d indica o nome do container, nesse caso podemos utilizar esse ao invés da pasta do volume.
+
+3- Docker Volume ("Shared-storage Volume") Cria diretamente na arquitetura de sistemas de arquivos da plataforma Docker,um volume salvo e mapeado.
+Obs : Pode ser adicionado plugins.
+
+
+docker volume create --name datastore
+# Criando um volume com o nome datastore
+
+docker run -v datastore:/tmp debian
+# A aplicação irá salvar em volume na pasta indicada, nesse caso é o /tmp, não irá ficar persistido no container, será diretamente para o volume.
+
+docker volume ls
+# Comando para manipular os volumes.
+
+================================== Configurando o proxy dentro do container ==========================================
+
+export http_proxy=http://bmartins:IndrA_brun0@proxylatam.indra.es:8080
+# Configurando o HTTP , com usuário e senha e respectiva porta.
+
+export https_proxy=http://bmartins:IndrA_brun0@proxylatam.indra.es:8080
+# Configurando o HTTPS
+
+unset {http,https,ftp,no}_proxy 
+# Desfazendo as configurações do Proxy utilizando um array {}
+
+
+================================ Link s Uteis ========================================================================
+
+https://www.icloud.com/keynote/0wCNgCKHRe9jwynm1eWhrOcQg#02_-_Docker_-_Parte_2
+
+=======================================================================================================================
+
