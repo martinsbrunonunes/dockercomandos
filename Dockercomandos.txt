@@ -163,10 +163,10 @@ docker volume ls
 
 ================================== Configurando o proxy dentro do container ==========================================
 
-export http_proxy=http://bmartins:IndrA_brun0@proxylatam.indra.es:8080
+export http_proxy=http://bmartins:minhasenha@proxylatam.indra.es:8080
 # Configurando o HTTP , com usuário e senha e respectiva porta.
 
-export https_proxy=http://bmartins:IndrA_brun0@proxylatam.indra.es:8080
+export https_proxy=http://bmartins:minhasenha@proxylatam.indra.es:8080
 # Configurando o HTTPS
 
 unset {http,https,ftp,no}_proxy 
