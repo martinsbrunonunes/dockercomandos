@@ -123,6 +123,14 @@
 
 ``docker rm $(docker ps -a -q)``
 
+#Remove todos os volumes Docker.
+
+`` docker volume rm $(docker volume ls -q -f dangling=true) ``
+
+#Remove todas as images que não possuem TAG.
+
+`` docker rmi $(docker images -q -f "dangling=true" --no-trunc) ``
+
 
 ## Comunicação entre containers 
 
