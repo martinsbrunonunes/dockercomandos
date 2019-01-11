@@ -171,6 +171,7 @@
 
 #Removendo um container de uma Rede.
 
+
 ``docker network disconnect redeA alpine2``
 
 #Apagando uma rede, mas para ser possível não poderá ter container conectado na mesma.
