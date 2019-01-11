@@ -58,7 +58,7 @@
 ``docker rm 13ea069d7c97``
 
 
-# Remove a imagem com hash 13ea069d7c97.
+#Remove a imagem com hash 13ea069d7c97.
 
 ``docker rmi 13ea069d7c97`` 
 
@@ -145,6 +145,41 @@
 
 ``docker run -d --name php_webpage --link database:db -p 9080:80 -v /home/bruno/site:/var/www/html php:5.6-apache``
 
+### Utilizando o Docker Network
+
+#Comando para criar uma rede.
+
+``docker network create redeA``
+
+``docker network create redeB``
+
+#Comando para executar um container na rede especificada.
+
+``docker run -itd --name ubuntu --network=redeA``
+
+``docker run -itd --name alpine --network=redeB``
+
+#Gerenciando redes Docker, exibirá as configurações da rede e os containers conectados.
+#OBS : Irá também gerar configurações de rede na máquina física (ip a) .
+
+``docker inspect redeA``
+
+#Conectando um container que já está em execução em uma rede específica.
+#OBS : Nesse caso iremos conectar o container com nome alpine2 na rede chamada redeA.
+
+``docker network connect redeA alpine2``
+
+#Removendo um container de uma Rede.
+
+``docker network disconnect redeA alpine2``
+
+#Apagando uma rede, mas para ser possível não poderá ter container conectado na mesma.
+
+``docker network rm redeA``
+
+#Comando para visualizar as redes criadas.
+
+``docker network ls``
 
 ## Criando Imagens com o Dockerfile 
 
