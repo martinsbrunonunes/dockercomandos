@@ -253,7 +253,7 @@ CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]``
 
 https://www.icloud.com/keynote/0wCNgCKHRe9jwynm1eWhrOcQg#02_-_Docker_-_Parte_2
 
-#Se houver entrypoint no Dockerfile e no momento de buildar a imagem for necessário anular, então execute :
+#Se houver entrypoint no Dockerfile e no momento de executar o container for necessário anular, então acresente :
 
 ``--entrypoint=""``
 
