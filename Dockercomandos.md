@@ -1,4 +1,5 @@
-﻿# Comandos úteis Docker
+﻿
+# Comandos úteis Docker
 
 ## Instalando o Docker
 
@@ -251,5 +252,9 @@ CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]``
 ## Link s Uteis 
 
 https://www.icloud.com/keynote/0wCNgCKHRe9jwynm1eWhrOcQg#02_-_Docker_-_Parte_2
+
+# Se houver entrypoint no Dockerfile e no momento de buildar a imagem for necessário anular, então execute :
+
+``--entrypoint=""``
 
 
