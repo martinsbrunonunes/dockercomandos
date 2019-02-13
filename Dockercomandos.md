@@ -30,6 +30,10 @@
 
 ``docker info``
 
+#Comandos Docker 
+
+``docker COMMAND --help``
+
 #Realiza o download da imagem hello-world
 
 ``docker pull hello-world``
