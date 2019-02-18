@@ -93,6 +93,7 @@
 
 ``docker run -it --name NOME_QUE_QUERO debian``
 
+
 #Comando que cria uma imagem do container NOME_QUE_QUERO com o nome SERVIDOR_WEB
 
 ``docker commit NOME_QUE_QUERO SERVIDOR_WEB``
@@ -111,6 +112,10 @@
 
 ``docker port new_web``
 
+
+#Exibirá os detalhes de configuração do container.
+
+``docker container inspect``
 
 #Exibirá no modelo json as configurações o volume jenkins_home. Há um campo chamado "Mountpoint" a qual exibe onde o volume esta fisicamente instalado.
 
@@ -142,6 +147,10 @@
 #Remove todas as images que não possuem TAG.
 
 `` docker rmi $(docker images -q -f "dangling=true" --no-trunc) ``
+
+#Comando para verificar os processos que estão rodando dentro do container.
+
+``docker container top [mais id/nome do container]``
 
 
 ## Comunicação entre containers 
@@ -193,6 +202,10 @@
 #Comando para visualizar as redes criadas.
 
 ``docker network ls``
+
+#Comando para listar os containers anexados em uma determinada rede.
+
+``docker network inspect [nome da rede]``
 
 ## Criando Imagens com o Dockerfile 
 
