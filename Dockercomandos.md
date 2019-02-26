@@ -207,6 +207,11 @@
 
 ``docker network inspect [nome da rede]``
 
+#Criando um Network Alias para o container. Nesse exemplo teremos dois containers a qual vão responder pelo mesmo DNS.
+
+``docker run -d --network=teste --network-alias alias_de_teste elasticsearch:2``
+``docker run -d --network=teste --network-alias alias_de_teste elasticsearch:2``
+
 ## Criando Imagens com o Dockerfile 
 
 ### Definição : Dockerfile é um arquivo de configuração que contém as instruções para criação de uma imagem.
