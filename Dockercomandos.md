@@ -9,7 +9,7 @@
 
 #Caso tenha algum proxy na rede, é necessário criar o arquivo .conf (o Docker lê os arquivos .conf) com os parametros do proxy, pois se não existir não será possível realizar o download das imagens.
 
- ``/etc/systemd/system/docker.service.d``
+``/etc/systemd/system/docker.service.d``
 
 
 ## Reiniciando o serciço do Docker 
@@ -152,6 +152,10 @@
 
 ``docker container top [mais id/nome do container]``
 
+#Para e remove o container no compose
+
+``docker-compose down --remove-orphans``
+
 
 ## Comunicação entre containers 
 
@@ -165,6 +169,66 @@
 
 
 ``docker run -d --name php_webpage --link database:db -p 9080:80 -v /home/bruno/site:/var/www/html php:5.6-apache``
+
+### Docker Swarm (orquestrador de container's)
+
+#Comando para iniciar o Docker Swarm
+
+``docker swarm init``
+
+#Comando que exibe os "nós" do cluster
+
+``docker node ls``
+
+#Comando que gera um token para eleição de um nó MANAGER
+
+``docker swarm join-token manager``
+
+#Comando para promover um node do Swarm para MANAGER
+
+``docker node promote [name/ID]``
+
+#Comando para despromover um node MANAGER 
+
+``docker node demote [name/ID]``
+
+#Comando para trazer os deetalhes do NÓ
+
+``docker node inspect [name/ID]``
+
+#Criando um serviço de container com balanceamento de serviços. No exemplo, utilizo 5 containers do NGINX.
+
+``docker service create --name nginx -p 8080:80 -- replicas 5 nginx``
+
+#Criando um serviço de container com balanceamento de serviços, e limitando o uso de CPU apenas 20% e memória apenas 64M.
+
+``docker service create --name nginx -p 8080:80 --replicas 1 --limit-cpu 0.2 --limit-memory 64M nginx``
+
+#Verificando o consumo de memória do container.
+
+``docker container stats [ID/NAME]``
+
+#Listando os container's e onde os mesmos estão rodando.
+
+``docker service ls``
+
+#Listando onde os container estão rodando pelo Service.
+
+``docker service ps [nome do serviço/ID]``
+
+#Visualizar os logs do SERVICE em real time.
+
+``docker service logs -f nginx``
+
+
+#OBS : Dentro do cluster Swarm temos dois papéis para os nós, MANAGER que é responsável pelo gerenciamento do cluster a qual verifica todos os recursos e afins. E temos também o Worker, somente executa os containers.
+
+#OBS : O ideal para trabalhar com service é que o docker swarm esteja inicializado.             
+
+
+
+
+
 
 ### Utilizando o Docker Network
 
